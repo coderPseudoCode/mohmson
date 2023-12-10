@@ -1,6 +1,6 @@
 "use server";
 
-import { userSchema, userType } from "@/app/register/register-schema";
+import { userSchema, userType } from "@/schemas/register-schema";
 import bcrypt from "bcrypt";
 import prisma from "@/prisma/prisma";
 

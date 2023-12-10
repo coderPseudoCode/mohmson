@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Button, Link } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { userSchema, userType } from "./register-schema";
+import { userSchema, userType } from "@/schemas/register-schema";
 import { registerUser } from "@/services/user-services";
 import { toast } from "react-toastify";
 import { BiCheckCircle } from "react-icons/bi";

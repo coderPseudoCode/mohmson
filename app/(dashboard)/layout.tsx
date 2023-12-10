@@ -7,25 +7,27 @@ import {
   DropdownMenu,
   DropdownTrigger,
   Image,
+  Link,
   Navbar,
   NavbarBrand,
   NavbarContent,
 } from "@nextui-org/react";
 import React from "react";
 import { useSession, signOut } from "next-auth/react";
+import AuthLoader from "@/components/auth-loader";
 
 export default function layout({ children }: { children: React.ReactNode }) {
-  const { status, data } = useSession();
-
-  console.log(data);
+  const { data } = useSession();
 
   return (
-    <>
+    <AuthLoader goto="/login" verb="unauthenticated">
       <Navbar maxWidth="full">
         <NavbarBrand>
           <Image src="logo.png" alt="logo" width={40} height={40} />
 
-          <h4>Transaction Authenticator</h4>
+          <Link href="/" className="font-semibold text-lg text-secondary">
+            Authenticator
+          </Link>
         </NavbarBrand>
 
         <NavbarContent as="div" justify="end">
@@ -41,19 +43,15 @@ export default function layout({ children }: { children: React.ReactNode }) {
               />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
-              <DropdownItem
-                key="profile"
-                href="/profile"
-                className="h-14 gap-2"
-              >
+              <DropdownItem key="user" className="h-14 gap-2">
                 <p className="font-semibold text-sm">Signed in as</p>
                 <p className="font-semibold">{data?.user?.name}</p>
               </DropdownItem>
               <DropdownItem key="profile" href="/profile">
                 Profile
               </DropdownItem>
-              <DropdownItem key="transactions" href="/transactions">
-                Authorised Transactions
+              <DropdownItem key="requests" href="/requests">
+                Authorised Requests
               </DropdownItem>
               <DropdownItem key="accounts" href="/accounts">
                 Linked Accounts
@@ -74,6 +72,6 @@ export default function layout({ children }: { children: React.ReactNode }) {
       <div className="flex justify-center">
         <div className="container">{children}</div>
       </div>
-    </>
+    </AuthLoader>
   );
 }

@@ -1,11 +1,18 @@
 "use client";
 
 import { NextUIProvider } from "@nextui-org/react";
+import { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 
-function Provider({ children }: { children: React.ReactNode }) {
+function Provider({
+  children,
+  session,
+}: {
+  children: React.ReactNode;
+  session: Session | null | undefined;
+}) {
   return (
-    <SessionProvider>
+    <SessionProvider session={session}>
       <NextUIProvider>{children}</NextUIProvider>
     </SessionProvider>
   );

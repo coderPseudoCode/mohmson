@@ -1,11 +1,16 @@
-import { Card, CardBody } from "@nextui-org/react";
-import Link from "next/link";
+import { Card, CardBody, Link } from "@nextui-org/react";
+import { getServerSession } from "next-auth";
 import React from "react";
 import { MdCode } from "react-icons/md";
+import { authOptions } from "../api/auth/[...nextauth]/route";
+import prisma from "@/prisma/prisma";
 
-export default function Index() {
+export default async function Index() {
+  const session = await getServerSession(authOptions);
   const activities = [1];
-  const accounts = [1];
+  const accounts = await prisma.account.findMany({
+    where: { user: { username: session?.user?.email ?? "" } },
+  });
 
   return (
     <div className="grid md:grid-cols-2 gap-x-16 gap-y-8 py-12">
@@ -60,20 +65,29 @@ export default function Index() {
       </div>
 
       <div className="col-span-1 bg-white">
-        <h4 className="font-bold text-xl">Linked accounts</h4>
+        <Link
+          href="/accounts"
+          className="font-bold text-xl text-black hover:underline"
+        >
+          Linked accounts
+        </Link>
 
         <div className="mb-4 mt-8">
           {accounts.length <= 0 ? (
             <p>No account linked</p>
           ) : (
-            accounts.map((account, index) => (
-              <div className="border-b last:border-none" key={index}>
+            accounts.map((account) => (
+              <div className="border-b last:border-none" key={account.id}>
                 <Link
-                  href={`/accounts/${account}`}
+                  href={`/accounts/${account.id}`}
                   className="flex-col w-full items-start text-black hover:bg-gray-50 p-2"
                 >
-                  <h4 className="font-semibold text-base">Bank name</h4>
-                  <p className="text-sm">account_number</p>
+                  <h4 className="font-semibold text-base">
+                    {account.accountName}
+                  </h4>
+                  <p className="text-sm">
+                    {account.accountNumber.toString().slice(0, 4)}
+                  </p>
                 </Link>
               </div>
             ))

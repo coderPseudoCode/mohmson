@@ -1,30 +1,30 @@
-import { Card, CardBody, Select } from "@nextui-org/react";
-import Link from "next/link";
+import { Card, CardBody, Link } from "@nextui-org/react";
 import React from "react";
+import prisma from "@/prisma/prisma";
+import LinkAccountForm from "./form";
 
-export default function LinkAccount() {
+export default async function LinkAccount() {
+  const banks = await prisma.bank.findMany();
+
   return (
-    <div className="flex justify-center">
-      <div className="w-2/5">
+    <div className="flex justify-center px-4 sm:px-0">
+      <div className="w-full sm:w-2/3 md:w-2/4 lg:w-2/5 xl:w-2/6">
         <Link href="/" className="text-primary">
           &larr; <strong>Back</strong>
         </Link>
-        <Card fullWidth={true} className="mt-4">
-          <CardBody>
-            <h4 className="text-xl font-bold">Link an account</h4>
+        {banks.length <= 0 ? (
+          <p>No bank has been integrated</p>
+        ) : (
+          <Card fullWidth={true} className="mt-4">
+            <CardBody className="p-8">
+              <h4 className="text-xl font-bold">Link an account</h4>
 
-            <form className="mt-8">
-              <fieldset className="mb-3">
-                <select name="bank" id="bank" className="form-control">
-                  <option value="" selected disabled>
-                    --- select bank ---
-                  </option>
-                  <option value="1">1</option>
-                </select>
-              </fieldset>
-            </form>
-          </CardBody>
-        </Card>
+              <div className="mb-2 mt-6">
+                <LinkAccountForm banks={banks} />
+              </div>
+            </CardBody>
+          </Card>
+        )}
       </div>
     </div>
   );

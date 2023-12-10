@@ -1,6 +1,6 @@
 "use client";
 
-import { loginSchema, loginType } from "./login-schema";
+import { loginSchema, loginType } from "@/schemas/login-schema";
 
 import React from "react";
 import { Button, Link } from "@nextui-org/react";
