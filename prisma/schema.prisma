@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int       @id @default(autoincrement())
+  fullName    String
+  phoneNumber BigInt    @unique
+  username    String    @unique
+  password    String
+  createdAt   DateTime  @default(now())
+  accounts    Account[]
+
+  @@map("users")
+}
+
+model Bank {
+  id                  Int       @id @default(autoincrement())
+  name                String
+  slug                String    @unique
+  accountNumberLength Int
+  createdAt           DateTime  @default(now())
+  accounts            Account[]
+
+  @@map("banks")
+}
+
+model Account {
+  id            Int           @id @default(autoincrement())
+  userId        Int
+  user          User          @relation(fields: [userId], references: [id])
+  bankId        Int
+  bank          Bank          @relation(fields: [bankId], references: [id])
+  accountNumber BigInt        @unique
+  transactions  Transaction[]
+
+  @@map("accounts")
+}
+
+model Transaction {
+  id          Int       @id @default(autoincrement())
+  accountId   Int
+  account     Account   @relation(fields: [accountId], references: [id])
+  status      String    @default("pending")
+  createdAt   DateTime  @default(now())
+  request     Request[]
+  description String
+
+  @@map("transactions")
+}
+
+model Request {
+  id            Int         @id @default(autoincrement())
+  code          Int
+  createdAt     DateTime    @default(now())
+  expiresAt     DateTime
+  isExpired     Boolean     @default(false)
+  isApproved    Boolean     @default(false)
+  status        String      @default("initialed")
+  transactionId Int
+  transaction   Transaction @relation(fields: [transactionId], references: [id])
+
+  @@map("requests")
+}
