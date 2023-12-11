@@ -5,7 +5,7 @@ export const bankSchema = z.object({
   accountNumber: z
     .string()
     .min(1, "Account number is required")
-    .min(15, "Account number must be at least 15 character"),
+    .min(10, "Account number must be at least 15\0 character"),
   accountName: z
     .string()
     .min(1, "Account name is required")

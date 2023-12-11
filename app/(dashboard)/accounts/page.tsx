@@ -35,6 +35,7 @@ export default async function Accounts() {
         ) : (
           accounts.map((account) => (
             <Link
+              key={account.id}
               href={`accounts/${account.id}`}
               className="border-b py-2 px-3 items-start flex flex-col text-black hover:bg-gray-100"
             >

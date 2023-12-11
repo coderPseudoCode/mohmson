@@ -7,9 +7,28 @@ import prisma from "@/prisma/prisma";
 
 export default async function Index() {
   const session = await getServerSession(authOptions);
-  const activities = [1];
+  const requests = await prisma.request.findMany({
+    where: {
+      account: {
+        user: {
+          username: { equals: session?.user?.email ?? "" },
+        },
+      },
+    },
+    include: {
+      account: {
+        include: {
+          bank: true,
+        },
+      },
+    },
+    take: 3,
+    orderBy: { createdAt: "desc" },
+  });
   const accounts = await prisma.account.findMany({
     where: { user: { username: session?.user?.email ?? "" } },
+    take: 5,
+    orderBy: { bank: { createdAt: "desc" } },
   });
 
   return (
@@ -17,34 +36,39 @@ export default async function Index() {
       <div className="col-span-1">
         <Card className="shadow">
           <CardBody>
-            {activities.length <= 0 ? (
+            {requests.length <= 0 ? (
               <div className="flex justify-center flex-col items-center py-8">
                 <p className="text-8xl text-rose-300 text-center">
                   <MdCode />
                 </p>
-                <p>Your activities will show here</p>
+                <p>Your requests will show here</p>
               </div>
             ) : (
               <>
-                <h4 className="font-bold text-xl">Recent activity</h4>
+                <h4 className="font-bold text-xl">Recent requests</h4>
 
                 <div className="mb-4 mt-8">
-                  {activities.map((activity, id) => (
+                  {requests.map((request, id) => (
                     <div
                       key={id}
                       className="border rounded-md p-3 mb-3 last:mb-0"
                     >
                       <Link
-                        href={`/activities/${activity}`}
+                        href={`/requests/${request.code}`}
                         className="flex-col items-start w-full text-black"
                       >
                         <div className="flex justify-between w-full">
                           <h4 className="text-base font-semibold">
-                            Transaction type
+                            {request.code}
                           </h4>
-                          <h4 className="text-base font-semibold">0.50</h4>
+                          <h4 className="text-base font-semibold">
+                            {request.account.bank.slug.toUpperCase()}
+                          </h4>
                         </div>
-                        <p className="text-sm">Date &mdash; Status</p>
+                        <p className="text-sm">
+                          {request.createdAt.toDateString()} &mdash;{" "}
+                          {request.status}
+                        </p>
                       </Link>
                     </div>
                   ))}
@@ -52,7 +76,7 @@ export default async function Index() {
 
                 <div className="mt-4">
                   <Link
-                    href="/activities"
+                    href="/requests"
                     className="font-bold text-lg text-primary"
                   >
                     Show all
@@ -87,6 +111,13 @@ export default async function Index() {
                   </h4>
                   <p className="text-sm">
                     {account.accountNumber.toString().slice(0, 4)}
+                    {Array.from(
+                      { length: account.accountNumber.toString().length - 7 },
+                      () => "*"
+                    ).join("")}
+                    {account.accountNumber
+                      .toString()
+                      .slice(account.accountNumber.toString().length - 3)}
                   </p>
                 </Link>
               </div>

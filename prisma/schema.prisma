@@ -37,12 +37,13 @@ model Bank {
 model Account {
   id            Int       @id @default(autoincrement())
   userId        String
-  user          User      @relation(fields: [userId], references: [username])
+  user          User      @relation(fields: [userId], references: [username], onDelete: Cascade)
   bankId        Int
-  bank          Bank      @relation(fields: [bankId], references: [id])
+  bank          Bank      @relation(fields: [bankId], references: [id], onDelete: Restrict)
   accountNumber String    @unique
   accountName   String
   requests      Request[]
+  createdAt     DateTime  @default(now())
 
   @@map("accounts")
 }
@@ -51,7 +52,7 @@ model BankCode {
   id            String   @id
   bankId        Int
   accountNumber String   @unique
-  bank          Bank     @relation(references: [id], fields: [bankId])
+  bank          Bank     @relation(references: [id], fields: [bankId], onDelete: Cascade)
   createdAt     DateTime @default(now())
 
   @@map("bank_codes")
@@ -64,7 +65,7 @@ model Request {
   isExpired  Boolean  @default(false)
   isApproved Boolean  @default(false)
   status     String   @default("initiated")
-  account    Account  @relation(fields: [accountId], references: [id])
+  account    Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
   accountId  Int
 
   @@map("requests")

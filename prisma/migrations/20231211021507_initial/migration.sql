@@ -24,7 +24,8 @@ CREATE TABLE "accounts" (
     "bankId" INTEGER NOT NULL,
     "accountNumber" TEXT NOT NULL,
     "accountName" TEXT NOT NULL,
-    CONSTRAINT "accounts_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users" ("username") ON DELETE RESTRICT ON UPDATE CASCADE,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "accounts_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users" ("username") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "accounts_bankId_fkey" FOREIGN KEY ("bankId") REFERENCES "banks" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
@@ -34,7 +35,7 @@ CREATE TABLE "bank_codes" (
     "bankId" INTEGER NOT NULL,
     "accountNumber" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "bank_codes_bankId_fkey" FOREIGN KEY ("bankId") REFERENCES "banks" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT "bank_codes_bankId_fkey" FOREIGN KEY ("bankId") REFERENCES "banks" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -46,7 +47,7 @@ CREATE TABLE "requests" (
     "isApproved" BOOLEAN NOT NULL DEFAULT false,
     "status" TEXT NOT NULL DEFAULT 'initiated',
     "accountId" INTEGER NOT NULL,
-    CONSTRAINT "requests_accountId_fkey" FOREIGN KEY ("accountId") REFERENCES "accounts" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT "requests_accountId_fkey" FOREIGN KEY ("accountId") REFERENCES "accounts" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateIndex

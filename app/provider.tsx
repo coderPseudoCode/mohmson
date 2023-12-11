@@ -9,7 +9,7 @@ function Provider({
   session,
 }: {
   children: React.ReactNode;
-  session: Session | null | undefined;
+  session?: Session | null | undefined;
 }) {
   return (
     <SessionProvider session={session}>

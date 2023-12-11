@@ -49,7 +49,7 @@ export default async function AccountDetails({
 
               <tr>
                 <td>Created at:</td>
-                <td>{account.bank.createdAt.toUTCString()}</td>
+                <td>{account.createdAt.toUTCString()}</td>
               </tr>
             </tbody>
           </table>
@@ -60,18 +60,20 @@ export default async function AccountDetails({
               <em>No requests for this account</em>
             </small>
           ) : (
-            account.requests.map((request) => (
-              <Link
-                href={`/activities/${request.code}`}
-                key={request.code}
-                className="flex-col text-black items-start"
-              >
-                <p className="font-semibold">{request.code}</p>
-                <p>
-                  {request.createdAt.toDateString()} &mdash; {request.status}
-                </p>
-              </Link>
-            ))
+            <div className="flex flex-col mt-2">
+              {account.requests.map((request) => (
+                <Link
+                  href={`/activities/${request.code}`}
+                  key={request.code}
+                  className="flex-col text-black items-start hover:bg-gray-200 py-1 px-3 border-b last:border-none"
+                >
+                  <p className="font-semibold">{request.code}</p>
+                  <p>
+                    {request.createdAt.toDateString()} &mdash; {request.status}
+                  </p>
+                </Link>
+              ))}
+            </div>
           )}
         </section>
       </div>
