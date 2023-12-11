@@ -75,9 +75,9 @@ export default function AuthLoader({
       }
     };
 
-    return () => {
-      ws.close();
-    };
+    // return () => {
+    //   ws.close();
+    // };
   }, [data]);
 
   return status === "loading" ? (
